@@ -12,6 +12,7 @@ import { setLoading } from "@/store/loading/loadingSlice";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import OAuth from "@/components/OAuth";
 import { signInUser } from "@/store/user/userSlice";
+import Heading from "@/components/Heading";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -43,7 +44,7 @@ export default function SignIn() {
         toast.success(res.data.message);
         dispatch(setLoading(false));
         dispatch(signInUser(res.data.user));
-        // navigate("/signin");
+        navigate("/dashboard");
       }
     } catch (err: any) {
       toast.error(err.response.data.message);
@@ -54,11 +55,7 @@ export default function SignIn() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-5 max-w-[620px] mx-auto p-10 bg-white rounded-xl shadow-xl">
-        <h1 className="font-bold text-3xl mb-8">
-          <span className="bg-gradient-to-r from-pink-400 via-red-500 to-orange-500 text-transparent bg-clip-text">
-            Sign In
-          </span>
-        </h1>
+        <Heading title="Sign In" />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

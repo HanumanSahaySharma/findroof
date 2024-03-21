@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setLoading } from "@/store/loading/loadingSlice";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import OAuth from "@/components/OAuth";
+import Heading from "@/components/Heading";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -57,11 +58,7 @@ export default function SignUp() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-5 max-w-[620px] mx-auto p-10 bg-white rounded-xl shadow-xl">
-        <h1 className="font-bold text-3xl mb-8">
-          <span className="bg-gradient-to-r from-pink-400 via-red-500 to-orange-500 text-transparent bg-clip-text">
-            Sign Up
-          </span>
-        </h1>
+        <Heading title="Sign Up" />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
