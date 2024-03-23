@@ -16,6 +16,7 @@ import Logo from "../images/logo.svg";
 import { BiSolidUserCircle } from "react-icons/bi";
 import { LucideMenu } from "lucide-react";
 import { signOutUser } from "@/store/user/userSlice";
+import { Avatar, AvatarImage } from "./ui/avatar";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Header() {
       if (res.status === 200) {
         toast.success(res.data.message);
         dispatch(signOutUser());
+        navigate("/");
       }
     } catch (err: any) {
       console.log(err.response.data.message);
@@ -77,9 +79,15 @@ export default function Header() {
             )}
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-gray-300 hover:shadow-lg pl-4 pr-1.5 py-1.5 text-gray-500 focus:outline-none transition-all">
+            <DropdownMenuTrigger className="h-12 flex items-center gap-2 rounded-full border border-gray-300 hover:shadow-lg pl-4 pr-1.5 py-1 text-gray-500 focus:outline-none transition-all">
               <LucideMenu size={20} />
-              <BiSolidUserCircle size={36} className="text-gray-500" />
+              {currentUser ? (
+                <Avatar className="p-1">
+                  <AvatarImage className="rounded-full" src={currentUser.profileImage} sizes="30" />
+                </Avatar>
+              ) : (
+                <BiSolidUserCircle size={36} className="text-gray-500" />
+              )}
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-60 shadow-xl">
               {currentUser && (

@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
-    username: {
+    name: {
       type: String,
       required: true,
     },
@@ -14,6 +14,10 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    profileImage: {
+      type: String,
+      default: "https://placehold.co/200x200",
     },
   },
   {

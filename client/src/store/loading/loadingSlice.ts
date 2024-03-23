@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface ILoading {
+export interface ILoading {
   loading: boolean;
 }
 const initialState: ILoading = {

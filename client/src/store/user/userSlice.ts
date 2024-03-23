@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ICurrentUserInfo {
-  __v: number;
   _id: string;
-  username: string;
+  name: string;
   email: string;
+  profileImage: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -5,7 +5,7 @@ import { errorHandler } from "../utils/error";
 import { Request, Response, NextFunction } from "express";
 
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  let { username, email, password } = req.body;
+  let { name, email, password } = req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -14,7 +14,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
       const salt = await bcryptjs.genSalt(10);
       const hashedPassword = bcryptjs.hashSync(password, salt);
       password = hashedPassword;
-      const newUser = new User({ username, email, password });
+      const newUser = new User({ name, email, password });
       await newUser.save();
       return res.status(201).json({ message: "Signup successfully." });
     }
@@ -24,7 +24,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 export const signIn = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, email, password } = req.body;
+  const { name, email, password } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {

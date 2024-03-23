@@ -14,8 +14,8 @@ import OAuth from "@/components/OAuth";
 import Heading from "@/components/Heading";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
   }),
   email: z.string().email({
     message: "Enter a valid email address.",
@@ -33,7 +33,7 @@ export default function SignUp() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -63,10 +63,10 @@ export default function SignUp() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-slate-800">Username</FormLabel>
+                  <FormLabel className="text-slate-800">Name</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
