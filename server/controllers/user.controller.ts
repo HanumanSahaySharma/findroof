@@ -17,9 +17,6 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     if (req.body.name.length < 2 || req.body.name > 20) {
       return next(errorHandler(400, "Name must be between 2 and 20 charectors"));
     }
-    // if (!req.body.name.match(/^[a-zA-Z0-9]+$/)) {
-    //   return next(errorHandler(400, "Name can only contain letters and numbers"));
-    // }
   }
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -38,6 +35,18 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     );
     const { password: pass, ...rest } = updatedUser._doc;
     return res.status(200).json({ user: rest, success: true, message: "Profile updated successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.user.id !== req.params.userId) {
+    return next(errorHandler(401, "You are not allowed to update profile"));
+  }
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    return res.status(200).json({ message: "Account deleted successfully.", success: true });
   } catch (error) {
     next(error);
   }

@@ -13,6 +13,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { ILoading, setLoading } from "@/store/loading/loadingSlice";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 import Heading from "@/components/Heading";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -34,7 +44,7 @@ const formSchema = z.object({
   profileImage: z.string().optional(),
   name: z.string().min(2),
   email: z.string().email(),
-  password: z.string().min(5),
+  password: z.string(),
 });
 
 export default function Profile() {
@@ -115,7 +125,6 @@ export default function Profile() {
       }
     } catch (error: any) {
       dispatch(setLoading(false));
-      console.log(error);
       setError(error.response.data.message);
       if (error.response.status === 401) {
         dispatch(signOutUser());
@@ -129,9 +138,28 @@ export default function Profile() {
       uploadProfileImage();
     }
   }, [imageFile]);
+
+  const handleDeleteAccount = async () => {
+    try {
+      const res = await axios.delete(`/api/user/delete/${currentUser?._id}`);
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        dispatch(signOutUser());
+        navigate("/signin");
+      }
+    } catch (error: any) {
+      dispatch(setLoading(false));
+      setError(error.response.data.message);
+      if (error.response.status === 401) {
+        dispatch(signOutUser());
+        navigate("/signin");
+      }
+    }
+  };
+
   return (
     <div className="container max-w-screen-2xl ">
-      <div className="my-5 p-10 bg-white rounded-xl shadow-md">
+      <div className="my-5 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
         <Heading title="Profile" />
         <div className="mx-auto max-w-[540px]">
           {uploadError && (
@@ -265,16 +293,44 @@ export default function Profile() {
             </form>
           </Form>
           <div className="flex items-center gap-5 mt-5">
-            <Button type="button" className="w-full bg-slate-800 hover:bg-slate-700 transition-all duration-500">
-              Delete Account
-            </Button>
-            <Button
-              onClick={() => (dispatch(signOutUser()), navigate("/signin"))}
-              type="button"
-              className="w-full bg-slate-800 hover:bg-slate-700 transition-all duration-500"
-            >
-              Sign Out
-            </Button>
+            <Dialog>
+              <DialogTrigger
+                type="button"
+                className="w-full text-white px-4 py-2 h-10 text-sm rounded-md bg-slate-800 hover:bg-slate-700 transition-all duration-500"
+              >
+                Delete Account
+              </DialogTrigger>
+              <Button
+                onClick={() => (dispatch(signOutUser()), navigate("/signin"))}
+                type="button"
+                className="w-full bg-slate-800 hover:bg-slate-700 transition-all duration-500"
+              >
+                Sign Out
+              </Button>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="mb-2">Are you sure want to delete this accont?</DialogTitle>
+                  <DialogDescription className="mb-5">
+                    This action cannot be undone. This will permanently delete your account and remove your data from
+                    our servers.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="sm:justify-start">
+                  <Button
+                    type="button"
+                    onClick={() => handleDeleteAccount()}
+                    className="bg-gradient-to-r from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+                  >
+                    Yes. Confirm
+                  </Button>
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>

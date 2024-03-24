@@ -19,7 +19,7 @@ function App() {
     <Router>
       <ToastContainer autoClose={3000} />
       <Header />
-      <main className="bg-slate-100 min-h-screen overflow-x-hidden">
+      <main className="bg-slate-100 overflow-x-hidden">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
