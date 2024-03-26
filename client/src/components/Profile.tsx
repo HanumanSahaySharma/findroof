@@ -159,7 +159,7 @@ export default function Profile() {
 
   return (
     <div className="container max-w-screen-2xl ">
-      <div className="my-5 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
+      <div className="my-8 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
         <Heading title="Profile" />
         <div className="mx-auto max-w-[540px]">
           {uploadError && (
@@ -241,10 +241,7 @@ export default function Profile() {
                   <FormItem>
                     <FormLabel className="text-slate-800">Name</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border h-[42px] border-slate-300"
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -257,10 +254,7 @@ export default function Profile() {
                   <FormItem>
                     <FormLabel className="text-slate-800">Email address</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border h-[42px] border-slate-300"
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -273,11 +267,7 @@ export default function Profile() {
                   <FormItem>
                     <FormLabel className="text-slate-800">Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        {...field}
-                        className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border h-[42px] border-slate-300"
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

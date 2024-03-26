@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import AddProperty from "./components/AddProperty";
 
 function App() {
   const { currentUser } = useSelector((state: any) => state.user);
@@ -27,6 +28,7 @@ function App() {
           {currentUser && (
             <>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/properties/add-property" element={<AddProperty />} />
             </>
           )}
         </Routes>

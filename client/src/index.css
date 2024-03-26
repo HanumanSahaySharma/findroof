@@ -73,6 +73,13 @@
   body {
     @apply bg-background text-foreground text-slate-800;
   }
+  input,
+  textarea {
+    @apply focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border h-[42px] border-slate-400 !important;
+  }
+  .custom-radio + input[type="radio"]:checked + label {
+    @apply bg-slate-300;
+  }
 }
 .custom-min-h-screen {
   min-height: calc(100vh - 65px);

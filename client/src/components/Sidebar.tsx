@@ -12,7 +12,7 @@ export default function Sidebar() {
   const { search } = useLocation();
   const type = new URLSearchParams(search).get("tab");
   return (
-    <aside className="relative bg-white p-2 shadow-md col-span-1 flex flex-col justify-between">
+    <aside className="relative bg-white p-2 shadow-md col-span-2 flex flex-col justify-between">
       <ul className="flex flex-col gap-2">
         {SIDEBAR_ITEMS.map((item, index) => (
           <li key={index}>

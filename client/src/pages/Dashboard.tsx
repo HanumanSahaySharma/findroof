@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 
 import Profile from "@/components/Profile";
+import Properties from "@/components/Properties";
 
 export default function Dashboard() {
   const [tab, setTab] = useState("");
@@ -17,7 +18,10 @@ export default function Dashboard() {
   return (
     <div className="grid grid-flow-col gap-4 custom-min-h-screen">
       <Sidebar />
-      <div className="col-span-8">{tab === "profile" && <Profile />}</div>
+      <div className="col-span-8">
+        {tab === "profile" && <Profile />}
+        {tab === "properties" && <Properties />}
+      </div>
     </div>
   );
 }
