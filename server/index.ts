@@ -23,9 +23,11 @@ mongoose
 // Import all API routes
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
+import propertyRoutes from "./routes/property.route";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/property", propertyRoutes);
 
 // Run the express (node) app
 app.listen(port, () => {
