@@ -57,7 +57,7 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageFileUrl, setImageFileUrl] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>();
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const profileImageRef = useRef<HTMLInputElement>(null);
@@ -71,14 +71,14 @@ export default function Profile() {
     }
   };
 
-  const uploadProfileImage = () => {
+  const uploadProfileImage = async () => {
     setUploadError(null);
     if (!imageFile) {
       return false;
     }
     const storage = getStorage(app);
     const fileName = imageFile.name;
-    const storageRef = ref(storage, fileName);
+    const storageRef = ref(storage, `/profile/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
     uploadTask.on(
       "state_changed",
@@ -91,12 +91,11 @@ export default function Profile() {
         setUploadProgress(null);
         setUploadError("Could not upload image (file must be less than 2 MB)");
       },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl: string) => {
-          setImageFileUrl(downloadUrl);
-          setUploadProgress(null);
-          toast.success("Profile image upload successfully.");
-        });
+      async () => {
+        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+        setImageFileUrl(downloadUrl);
+        setUploadProgress(null);
+        toast.success("Profile image upload successfully.");
       }
     );
   };
@@ -188,7 +187,7 @@ export default function Profile() {
                       className="hidden"
                     />
                     <Avatar {...field} className="w-28 h-28 mx-auto mb-5 p-1 rounded-full overflow-visible shadow-md">
-                      {uploadProgress !== null && uploadProgress < 100 && (
+                      {uploadProgress !== null && uploadProgress <= 100 && (
                         <CircularProgressbar
                           className="absolute"
                           value={uploadProgress}
