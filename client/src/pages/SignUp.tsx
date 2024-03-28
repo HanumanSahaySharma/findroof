@@ -47,6 +47,7 @@ export default function SignUp() {
         toast.success(res.data.message);
         dispatch(setLoading(false));
         navigate("/signin");
+        form.reset();
       }
     } catch (err: any) {
       console.log(err);

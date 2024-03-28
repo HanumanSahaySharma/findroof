@@ -1,9 +1,8 @@
 import { z } from "zod";
 import { app } from "@/firebase";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { ICurrentUser } from "@/store/user/userSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSelector, useDispatch } from "react-redux";
 import { ChangeEvent, useRef, useState, useEffect } from "react";
@@ -31,9 +30,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import axios from "axios";
 
 const FormSchema = z.object({
-  images: z.array(z.string()),
+  photoUrls: z.array(z.string()),
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
@@ -57,17 +57,17 @@ const FormSchema = z.object({
   }),
   essentials: z.array(z.string()),
   features: z.array(z.string()),
-  sefetyFeatures: z.array(z.string()),
+  safetyFeatures: z.array(z.string()),
 });
 
 export default function AddProperty() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading } = useSelector((state: { loading: ILoading }) => state.loading);
-  const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
 
   const [images, setImages] = useState<FileList | null>(null);
   const [imagesUrl, setImagesUrl] = useState<string[] | null>(null);
-  const [uploadedImagesUrl, setUploadedImageUrl] = useState<string[] | null>(null);
+  const [uploadedImagesUrl, setUploadedImageUrl] = useState<string[]>([]);
 
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
@@ -78,7 +78,7 @@ export default function AddProperty() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      images: [],
+      photoUrls: [],
       name: "",
       description: "",
       price: "",
@@ -88,7 +88,7 @@ export default function AddProperty() {
       bathrooms: "",
       essentials: [],
       features: [],
-      sefetyFeatures: [],
+      safetyFeatures: [],
     },
   });
 
@@ -124,7 +124,7 @@ export default function AddProperty() {
         "state_changed",
         (snapshot: UploadTaskSnapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setProgress(Number(progress.toFixed(0)));
+          setProgress(Math.round(progress));
         },
         (error: any) => {
           setUploadError(error.message);
@@ -145,7 +145,7 @@ export default function AddProperty() {
 
   const deleteUploadedImage = async (url: string) => {
     const storage = getStorage(app);
-    const storageRef = ref(storage, `${url}`);
+    const storageRef = ref(storage, url);
     try {
       await deleteObject(storageRef);
       toast.success("Image deleted");
@@ -155,8 +155,24 @@ export default function AddProperty() {
     }
   };
 
-  function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof FormSchema>) {
+    values.photoUrls = uploadedImagesUrl;
+    if (values.photoUrls.length === 0) {
+      setUploadError("Please upload at least one property image here.");
+      return false;
+    }
+    dispatch(setLoading(true));
+    try {
+      const res = await axios.post("/api/property/add-property", values);
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        dispatch(setLoading(false));
+        navigate("/dashboard?tab=properties");
+        form.reset();
+      }
+    } catch (error) {
+      dispatch(setLoading(false));
+    }
   }
 
   useEffect(() => {
@@ -185,7 +201,7 @@ export default function AddProperty() {
               <div className="space-y-6 md:col-span-5 order-2">
                 <FormField
                   control={form.control}
-                  name="images"
+                  name="photoUrls"
                   render={() => (
                     <FormItem>
                       <Label>Upload Images</Label>
@@ -242,15 +258,17 @@ export default function AddProperty() {
                         </p>
                         <p className="text-sm text-slate-400">Images should be in JPEG or PNG Format.</p>
                       </div>
-                      <FormDescription>
-                        The first uploaded photo will become the cover image of the property.
-                      </FormDescription>
+                      <div>
+                        <FormDescription className="mb-5">
+                          The first uploaded photo will become the cover image of the property.
+                        </FormDescription>
+                      </div>
                       <FormMessage className="text-sm font-normal" />
                     </FormItem>
                   )}
                 ></FormField>
                 {uploadError && (
-                  <Alert variant="destructive">
+                  <Alert variant="destructive" className="border-0 p-0 m-0">
                     <AlertDescription>{uploadError}</AlertDescription>
                   </Alert>
                 )}
@@ -497,7 +515,7 @@ export default function AddProperty() {
                   ></FormField>
                   <FormField
                     control={form.control}
-                    name="sefetyFeatures"
+                    name="safetyFeatures"
                     render={({ field }) => (
                       <FormItem className="bg-slate-100 p-5 rounded-md">
                         <h3 className="font-medium mb-2">Safety</h3>
@@ -526,7 +544,7 @@ export default function AddProperty() {
 
             <Button
               type="submit"
-              disabled={false}
+              disabled={progress !== null && progress < 100}
               className="min-w-40 bg-gradient-to-r from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
             >
               {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : "Add"}

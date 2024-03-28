@@ -8,7 +8,7 @@ export interface IAmenities {
 
 export interface IProperty extends Document {
   userId: string;
-  images: string[];
+  photoUrls: string[];
   name: string;
   description: string;
   price: number;
@@ -40,7 +40,7 @@ const propertySchema = new Schema<IProperty>(
       type: String,
       required: true,
     },
-    images: {
+    photoUrls: {
       type: [String],
       required: true,
     },

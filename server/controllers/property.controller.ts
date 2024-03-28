@@ -3,7 +3,19 @@ import Property from "../models/property.model";
 import { errorHandler } from "../utils/error";
 
 export const addProperty = async (req: Request, res: Response, next: NextFunction) => {
-  const { images, name, description, price, propertyType, propertyFor, bedrooms, bathrooms, amenities } = req.body;
+  const {
+    photoUrls,
+    name,
+    description,
+    price,
+    propertyType,
+    propertyFor,
+    bedrooms,
+    bathrooms,
+    essentials,
+    features,
+    safetyFeatures,
+  } = req.body;
   try {
     const userId = req.user.id;
     const property = await Property.findOne({ name });
@@ -13,7 +25,7 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
     if (!property) {
       const newProperty = new Property({
         userId,
-        images,
+        photoUrls,
         name,
         description,
         price,
@@ -22,9 +34,9 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
         bedrooms,
         bathrooms,
         amenities: {
-          essentials: amenities.essentials,
-          features: amenities.features,
-          safety: amenities.safety,
+          essentials,
+          features,
+          safetyFeatures,
         },
       });
       await newProperty.save();
