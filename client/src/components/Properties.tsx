@@ -5,7 +5,7 @@ export default function Properties() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-8 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-8">
           <Heading title="Properties" />
           <Link
             to="/properties/add-property"

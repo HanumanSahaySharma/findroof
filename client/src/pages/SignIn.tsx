@@ -55,7 +55,7 @@ export default function SignIn() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-5 max-w-[620px] mx-auto p-10 bg-white rounded-xl shadow-xl">
-        <Heading title="Sign In" />
+        <Heading title="Sign In" cssClass="mb-8" />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

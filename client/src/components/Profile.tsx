@@ -159,7 +159,7 @@ export default function Profile() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-8 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
-        <Heading title="Profile" />
+        <Heading title="Profile" cssClass="mb-8" />
         <div className="mx-auto max-w-[540px]">
           {uploadError && (
             <Alert variant="destructive" className="py-2">

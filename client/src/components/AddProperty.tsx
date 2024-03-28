@@ -168,7 +168,7 @@ export default function AddProperty() {
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-8 p-6 md:p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
-        <div className="flex items-center mb-10">
+        <div className="flex items-center mb-8">
           <Link
             to="/dashboard?tab=properties"
             className="mr-5 p-0.5 rounded-md bg-gradient-to-r text-white from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
