@@ -11,6 +11,7 @@ interface IAmenities {
 }
 
 export interface IProperty {
+  _id: string;
   userId: string;
   photoUrls: string[];
   name: string;
@@ -22,8 +23,6 @@ export interface IProperty {
   bedrooms: number;
   bathrooms: number;
   amenities: IAmenities;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export default function PropertyCard({ property }: { property: IProperty }) {

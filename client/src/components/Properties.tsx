@@ -4,27 +4,34 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Heading from "./Heading";
-import PropertyCard from "./PropertyCard";
+import PropertyCard, { IProperty } from "./PropertyCard";
 import { ICurrentUser } from "@/store/user/userSlice";
+import SkeletonProerty from "./skeleton/SkeletonProperty";
 
 export default function Properties() {
-  const [properties, setProperties] = useState<string[] | null>([]);
+  const [properties, setProperties] = useState<IProperty[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
 
   const getProperties = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`/api/property/get-properties/${currentUser?._id}`);
       if (res.status === 200) {
         setProperties(res.data.properties);
-        toast.success(res.data.message);
+        toast.success(res.data.message, {
+          toastId: "success",
+        });
+        setLoading(false);
       }
     } catch (error: any) {
       console.log(error.response.data.message);
+      setLoading(false);
     }
   };
   useEffect(() => {
     getProperties();
-  }, []);
+  }, [currentUser]);
   console.log(properties);
   return (
     <div className="container max-w-screen-2xl ">
@@ -38,9 +45,14 @@ export default function Properties() {
             Add Property
           </Link>
         </div>
-        {properties &&
-          properties.length > 0 &&
-          properties.map((property, index) => <PropertyCard property={property} key={index} />)}
+
+        {loading ? (
+          <SkeletonProerty />
+        ) : properties.length > 0 ? (
+          properties.map((property: IProperty) => <PropertyCard property={property} key={property._id} />)
+        ) : (
+          <p>No properties found.</p>
+        )}
       </div>
     </div>
   );
