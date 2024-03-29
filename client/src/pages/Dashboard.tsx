@@ -16,9 +16,9 @@ export default function Dashboard() {
     }
   }, [location.search]);
   return (
-    <div className="grid grid-flow-col gap-4 custom-min-h-screen">
+    <div className="grid grid-cols-12 gap-4 custom-min-h-screen">
       <Sidebar />
-      <div className="col-span-8">
+      <div className="col-span-10">
         {tab === "profile" && <Profile />}
         {tab === "properties" && <Properties />}
       </div>

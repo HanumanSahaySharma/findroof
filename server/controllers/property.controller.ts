@@ -7,6 +7,7 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
     photoUrls,
     name,
     description,
+    address,
     price,
     propertyType,
     propertyFor,
@@ -28,6 +29,7 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
         photoUrls,
         name,
         description,
+        address,
         price,
         propertyType,
         propertyFor,
@@ -44,5 +46,17 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getProperties = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.user.id !== req.params.userId) {
+    return next(errorHandler(401, "Unathorized user."));
+  }
+  try {
+    const properties = await Property.find({ userId: req.params.userId });
+    return res.status(200).json({ properties, message: "Properties fetched successfully.", success: true });
+  } catch (error) {
+    next(error);
   }
 };

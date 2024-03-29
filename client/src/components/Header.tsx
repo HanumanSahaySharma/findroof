@@ -15,7 +15,7 @@ import {
 import Logo from "../images/logo.svg";
 import { BiSolidUserCircle } from "react-icons/bi";
 import { LucideMenu } from "lucide-react";
-import { signOutUser } from "@/store/user/userSlice";
+import { ICurrentUser, signOutUser } from "@/store/user/userSlice";
 import { Avatar, AvatarImage } from "./ui/avatar";
 
 export default function Header() {
@@ -25,7 +25,7 @@ export default function Header() {
       navigate("/signin");
     }
   }, []);
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
   const dispatch = useDispatch();
   const handleSignOut = async () => {
     try {
@@ -93,7 +93,7 @@ export default function Header() {
               {currentUser && (
                 <>
                   <DropdownMenuLabel className="font-normal">
-                    <p className="font-semibold mb-1">{currentUser.username}</p>
+                    <p className="font-semibold mb-1">{currentUser?.name}</p>
                     <p>{currentUser.email}</p>
                   </DropdownMenuLabel>
                 </>

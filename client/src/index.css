@@ -71,7 +71,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground text-slate-800;
+    @apply bg-background text-foreground text-slate-800 text-[15px];
   }
   input,
   textarea {
@@ -79,6 +79,14 @@
   }
   .custom-radio + input[type="radio"]:checked + label {
     @apply bg-slate-300;
+  }
+  .ribbon::after {
+    left: 0;
+    bottom: -15px;
+    position: absolute;
+    content: "";
+    border-bottom: 15px solid transparent;
+    border-right: 12px solid #333;
   }
 }
 .custom-min-h-screen {

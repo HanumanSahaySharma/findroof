@@ -40,6 +40,9 @@ const FormSchema = z.object({
   description: z.string().min(20, {
     message: "Description must be at least 20 characters.",
   }),
+  address: z.string().min(5, {
+    message: "Address should be at least 5 charactors",
+  }),
   price: z.string().min(1, {
     message: "Enter property base price.",
   }),
@@ -81,6 +84,7 @@ export default function AddProperty() {
       photoUrls: [],
       name: "",
       description: "",
+      address: "",
       price: "",
       propertyType: "",
       propertyFor: "",
@@ -138,6 +142,7 @@ export default function AddProperty() {
             return [downloadURL];
           });
           setProgress(null);
+          toast.success("Property images uploaded successfully.");
         }
       );
     }
@@ -319,6 +324,19 @@ export default function AddProperty() {
                       <FormLabel className="text-slate-800">Description</FormLabel>
                       <FormControl>
                         <Textarea {...field} rows={10} className="resize-none" />
+                      </FormControl>
+                      <FormMessage className="text-sm font-normal" />
+                    </FormItem>
+                  )}
+                ></FormField>
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-800">Address</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage className="text-sm font-normal" />
                     </FormItem>

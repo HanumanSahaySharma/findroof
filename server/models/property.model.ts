@@ -11,6 +11,7 @@ export interface IProperty extends Document {
   photoUrls: string[];
   name: string;
   description: string;
+  address: string;
   price: number;
   propertyType: string;
   propertyFor: string;
@@ -49,6 +50,10 @@ const propertySchema = new Schema<IProperty>(
       required: true,
     },
     description: {
+      type: String,
+      required: true,
+    },
+    address: {
       type: String,
       required: true,
     },
