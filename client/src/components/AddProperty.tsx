@@ -142,7 +142,9 @@ export default function AddProperty() {
             return [downloadURL];
           });
           setProgress(null);
-          toast.success("Property images uploaded successfully.");
+          toast.success("Property images uploaded successfully.", {
+            toastId: "success",
+          });
         }
       );
     }
@@ -153,7 +155,9 @@ export default function AddProperty() {
     const storageRef = ref(storage, url);
     try {
       await deleteObject(storageRef);
-      toast.success("Image deleted");
+      toast.success("Image deleted", {
+        toastId: "success",
+      });
       setUploadedImageUrl((prevUrls) => prevUrls.filter((prevUrl) => prevUrl !== url));
     } catch (error) {
       console.log(error);

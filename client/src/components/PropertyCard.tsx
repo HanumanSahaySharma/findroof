@@ -1,8 +1,18 @@
 import { Button } from "./ui/button";
 import { useSelector } from "react-redux";
 import { ICurrentUser } from "@/store/user/userSlice";
-import { LucideMapPin, LucideTv2, LucideWashingMachine, LucideWifi } from "lucide-react";
+import {
+  LucideCheck,
+  LucideCheckCircle2,
+  LucideIndianRupee,
+  LucideMapPin,
+  LucideTv2,
+  LucideWashingMachine,
+  LucideWifi,
+} from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { capitalizeText } from "@/store/utils/capitalizeText";
+import { Link } from "react-router-dom";
 
 interface IAmenities {
   essentials: string[];
@@ -13,6 +23,7 @@ interface IAmenities {
 export interface IProperty {
   _id: string;
   userId: string;
+  slug: string;
   photoUrls: string[];
   name: string;
   description: string;
@@ -27,15 +38,17 @@ export interface IProperty {
 
 export default function PropertyCard({ property }: { property: IProperty }) {
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
+  const { userId, slug, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
+  const { essentials } = amenities;
   return (
     <div className="grid grid-cols-12 gap-8 bg-slate-100 p-4 mb-5 rounded-md">
       <div className="col-span-4 relative">
         <div className="absolute -left-3 top-2 shadow-lg rounded-tr rounded-br bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500 text-white p-2 z-[1] ribbon">
-          For {property.propertyFor}
+          For {propertyFor}
         </div>
         <Carousel className="relative rounded-md overflow-hidden">
           <CarouselContent>
-            {property.photoUrls.map((url: string, index: number) => (
+            {photoUrls.map((url: string, index: number) => (
               <CarouselItem key={index} className="bg-cover w-full h-60" style={{ backgroundImage: `url(${url})` }} />
             ))}
           </CarouselContent>
@@ -44,47 +57,52 @@ export default function PropertyCard({ property }: { property: IProperty }) {
         </Carousel>
       </div>
       <div className="col-span-8">
-        <h2 className="font-medium text-xl mb-2">{property.name}</h2>
+        <h2 className="font-medium text-xl mb-2">{name}</h2>
         <p className="text-slate-500 flex items-center gap-2 mb-5">
-          <LucideMapPin size={18} /> {property.address}
+          <LucideMapPin size={18} /> {address}
         </p>
         <div className="flex flex-wrap gap-5 mb-5">
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-slate-200 flex items-center justify-center w-8 h-8">
-              <LucideWifi size={18} className="text-red-500" />
-            </span>
-            <span className="font-medium">WiFi</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-slate-200 flex items-center justify-center w-8 h-8">
-              <LucideTv2 size={18} className="text-red-500" />
-            </span>
-            <span className="font-medium">TV</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-slate-200 flex items-center justify-center w-8 h-8">
-              <LucideWashingMachine size={18} className="text-red-500" />
-            </span>
-            <span className="font-medium">Washing Machine</span>
-          </div>
+          {essentials.length > 2 &&
+            essentials.slice(0, 3).map((ess) => (
+              <div className="flex items-center gap-2" key={ess}>
+                <LucideCheckCircle2 size={20} className="text-red-500" />
+                <span className="font-medium">{capitalizeText(ess)}</span>
+              </div>
+            ))}
+          {essentials.length - 3 !== 0 && <span className="text-slate-400">+ {essentials.length - 3} more</span>}
         </div>
-        <div className="line-clamp-1 text-slate-500 mb-10">{property.description}</div>
-        <div className="flex justify-end gap-4">
-          {currentUser?._id === property.userId && (
-            <Button className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500">
-              Edit
-            </Button>
-          )}
-          {currentUser?._id !== property.userId && (
-            <>
-              <Button className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500">
-                View Details
-              </Button>
-              <Button className="font-normal bg-gradient-to-tr from-green-500 via-green-500 to-green-700  hover:from-green-600 hover:via-green-600 hover:to-green-400 transition-background duration-500">
-                Book Now
-              </Button>
-            </>
-          )}
+        <div className="line-clamp-1 mb-10">{description}</div>
+
+        <div className="flex justify-between gap-4">
+          <div>
+            <p className="font-bold text-2xl flex items-center">
+              <LucideIndianRupee size={20} className="mr-1" />
+              {price}
+            </p>
+            {propertyType === "room" && <p className="text-sm text-slate-500">Room Per Night</p>}
+            {propertyType === "home" && <p className="text-sm text-slate-500">Entire Home Per Night</p>}
+          </div>
+
+          <div className="flex justify-end gap-4">
+            {currentUser?._id === userId && (
+              <Link
+                to={`/property/${slug}/edit`}
+                className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+              >
+                Edit
+              </Link>
+            )}
+            {currentUser?._id !== userId && (
+              <>
+                <Button className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500">
+                  View Details
+                </Button>
+                <Button className="font-normal bg-gradient-to-tr from-green-500 via-green-500 to-green-700  hover:from-green-600 hover:via-green-600 hover:to-green-400 transition-background duration-500">
+                  Book Now
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

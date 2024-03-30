@@ -8,6 +8,7 @@ export interface IAmenities {
 
 export interface IProperty extends Document {
   userId: string;
+  slug: string;
   photoUrls: string[];
   name: string;
   description: string;
@@ -38,6 +39,10 @@ const amenitiesSchema = new Schema<IAmenities>({
 const propertySchema = new Schema<IProperty>(
   {
     userId: {
+      type: String,
+      required: true,
+    },
+    slug: {
       type: String,
       required: true,
     },

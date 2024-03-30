@@ -24,8 +24,10 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
       return next(errorHandler(401, "This property is already added for the listing."));
     }
     if (!property) {
+      const slug = name.split(" ").join("-").toLowerCase();
       const newProperty = new Property({
         userId,
+        slug,
         photoUrls,
         name,
         description,
