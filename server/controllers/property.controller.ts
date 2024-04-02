@@ -52,12 +52,81 @@ export const addProperty = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const getProperties = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.user.id !== req.params.userId) {
-    return next(errorHandler(401, "Unathorized user."));
+  try {
+    const properties = await Property.find({
+      ...(req.query.userId && { userId: req.query.userId }),
+      ...(req.query.propertyId && { _id: req.query.propertyId }),
+      ...(req.query.slug && { slug: req.query.slug }),
+    });
+    return res.status(200).json({ properties, message: "Properties fetched successfully.", success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editProperty = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.user.id !== req.query.userId) {
+    return next(errorHandler(401, "You are not allowed to edit this property"));
   }
   try {
-    const properties = await Property.find({ userId: req.params.userId });
-    return res.status(200).json({ properties, message: "Properties fetched successfully.", success: true });
+    const {
+      photoUrls,
+      name,
+      description,
+      address,
+      price,
+      propertyType,
+      propertyFor,
+      bedrooms,
+      bathrooms,
+      essentials,
+      features,
+      safetyFeatures,
+    } = req.body;
+    const slug = name.split(" ").join("-").toLowerCase();
+    const property = await Property.findByIdAndUpdate(
+      req.params.propertyId,
+      {
+        $set: {
+          slug,
+          name,
+          photoUrls,
+          description,
+          address,
+          price,
+          propertyType,
+          propertyFor,
+          bedrooms,
+          bathrooms,
+          amenities: {
+            essentials,
+            features,
+            safetyFeatures,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.status(201).json(property);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removeDeletedPhotoUrl = async (req: Request, res: Response, next: NextFunction) => {
+  const deletedUrl = req.body.url;
+  try {
+    let property = await Property.find({ _id: req.query.propertyId });
+    if (!property) {
+      return next(errorHandler(404, "Property not found"));
+    }
+    const { photoUrls } = property[0];
+    const updatedPhotoUrls = photoUrls.filter((url: string) => url !== deletedUrl);
+    property[0].photoUrls = updatedPhotoUrls;
+    await property[0].save();
+    return res.status(201).json({ message: "Photo removed.", success: true, property });
   } catch (error) {
     next(error);
   }

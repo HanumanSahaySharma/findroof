@@ -1,15 +1,7 @@
 import { Button } from "./ui/button";
 import { useSelector } from "react-redux";
 import { ICurrentUser } from "@/store/user/userSlice";
-import {
-  LucideCheck,
-  LucideCheckCircle2,
-  LucideIndianRupee,
-  LucideMapPin,
-  LucideTv2,
-  LucideWashingMachine,
-  LucideWifi,
-} from "lucide-react";
+import { LucideCheckCircle2, LucideIndianRupee, LucideMapPin } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { capitalizeText } from "@/store/utils/capitalizeText";
 import { Link } from "react-router-dom";
@@ -21,9 +13,9 @@ interface IAmenities {
 }
 
 export interface IProperty {
-  _id: string;
-  userId: string;
-  slug: string;
+  _id?: string;
+  userId?: string;
+  slug?: string;
   photoUrls: string[];
   name: string;
   description: string;
@@ -39,22 +31,37 @@ export interface IProperty {
 export default function PropertyCard({ property }: { property: IProperty }) {
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
   const { userId, slug, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
-  const { essentials } = amenities;
+  const essentials = amenities.essentials.sort();
   return (
     <div className="grid grid-cols-12 gap-8 bg-slate-100 p-4 mb-5 rounded-md">
       <div className="col-span-4 relative">
         <div className="absolute -left-3 top-2 shadow-lg rounded-tr rounded-br bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500 text-white p-2 z-[1] ribbon">
           For {propertyFor}
         </div>
-        <Carousel className="relative rounded-md overflow-hidden">
-          <CarouselContent>
-            {photoUrls.map((url: string, index: number) => (
-              <CarouselItem key={index} className="bg-cover w-full h-60" style={{ backgroundImage: `url(${url})` }} />
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-1 top-[50%] -translate-y-[50%]" />
-          <CarouselNext className="absolute right-1 top-[50%] -translate-y-[50%]" />
-        </Carousel>
+        {photoUrls.length > 1 ? (
+          <Carousel className="relative rounded-md overflow-hidden">
+            <CarouselContent>
+              {photoUrls.map((url: string, index: number) => (
+                <CarouselItem
+                  key={index}
+                  className="bg-cover w-full h-60 rounded-md"
+                  style={{ backgroundImage: `url(${url})` }}
+                />
+              ))}
+            </CarouselContent>
+            {photoUrls.length > 1 && (
+              <>
+                <CarouselPrevious className="absolute left-1 top-[50%] -translate-y-[50%]" />
+                <CarouselNext className="absolute right-1 top-[50%] -translate-y-[50%]" />
+              </>
+            )}
+          </Carousel>
+        ) : (
+          <div
+            className="bg-cover w-full h-60 rounded-md"
+            style={{ backgroundImage: `url('https://placehold.co/600x400/fee2e2/333333/png` }}
+          />
+        )}
       </div>
       <div className="col-span-8">
         <h2 className="font-medium text-xl mb-2">{name}</h2>
@@ -86,8 +93,8 @@ export default function PropertyCard({ property }: { property: IProperty }) {
           <div className="flex justify-end gap-4">
             {currentUser?._id === userId && (
               <Link
-                to={`/property/${slug}/edit`}
-                className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+                to={`/properties/edit/${property._id}`}
+                className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
               >
                 Edit
               </Link>

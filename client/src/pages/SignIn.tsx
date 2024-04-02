@@ -44,7 +44,7 @@ export default function SignIn() {
         toast.success(res.data.message);
         dispatch(setLoading(false));
         dispatch(signInUser(res.data.user));
-        navigate("/dashboard");
+        navigate(`/dashboard?tab=dashboard`);
         form.reset();
       }
     } catch (err: any) {

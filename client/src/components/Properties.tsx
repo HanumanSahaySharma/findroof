@@ -16,7 +16,7 @@ export default function Properties() {
   const getProperties = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/property/get-properties/${currentUser?._id}`);
+      const res = await axios.get(`/api/property/get-properties?userId=${currentUser?._id}`);
       if (res.status === 200) {
         setProperties(res.data.properties);
         toast.success(res.data.message, {
@@ -32,7 +32,6 @@ export default function Properties() {
   useEffect(() => {
     getProperties();
   }, [currentUser]);
-  console.log(properties);
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-8 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">

@@ -13,6 +13,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import AddProperty from "./components/AddProperty";
+import EditProperty from "./components/EditProperty";
 
 function App() {
   const { currentUser } = useSelector((state: any) => state.user);
@@ -20,7 +21,7 @@ function App() {
     <Router>
       <ToastContainer autoClose={3000} />
       <Header />
-      <main className="bg-slate-100 overflow-x-hidden">
+      <main className="bg-slate-100 overflow-x-hidden custom-min-h-screen">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
@@ -29,6 +30,7 @@ function App() {
             <>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/properties/add-property" element={<AddProperty />} />
+              <Route path="/properties/edit/:propertyId" element={<EditProperty />} />
             </>
           )}
         </Routes>
