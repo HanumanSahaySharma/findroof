@@ -28,10 +28,16 @@ export interface IProperty {
   amenities: IAmenities;
 }
 
-export default function PropertyCard({ property }: { property: IProperty }) {
+interface IPropertyCard {
+  property: IProperty;
+  deleteProperty: any;
+}
+
+export default function PropertyCard({ property, deleteProperty }: IPropertyCard) {
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
-  const { userId, slug, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
+  const { userId, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
   const essentials = amenities.essentials.sort();
+
   return (
     <div className="grid grid-cols-12 gap-8 bg-slate-100 p-4 mb-5 rounded-md">
       <div className="col-span-4 relative">
@@ -92,12 +98,20 @@ export default function PropertyCard({ property }: { property: IProperty }) {
 
           <div className="flex justify-end gap-4">
             {currentUser?._id === userId && (
-              <Link
-                to={`/properties/edit/${property._id}`}
-                className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
-              >
-                Edit
-              </Link>
+              <>
+                <Link
+                  to={`/properties/edit/${property._id}`}
+                  className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+                >
+                  Edit
+                </Link>
+                <Button
+                  onClick={() => deleteProperty(property._id, property.userId)}
+                  className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+                >
+                  Delete
+                </Button>
+              </>
             )}
             {currentUser?._id !== userId && (
               <>

@@ -115,6 +115,20 @@ export const editProperty = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
+export const deleteProperty = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.user.id);
+  console.log(req.query.userId);
+  if (req.user.id !== req.query.userId) {
+    return next(errorHandler(401, "User not authorized."));
+  }
+  try {
+    const property = await Property.findByIdAndDelete(req.query.propertyId);
+    return res.status(200).json({ message: "Property deleted successfully.", success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const removeDeletedPhotoUrl = async (req: Request, res: Response, next: NextFunction) => {
   const deletedUrl = req.body.url;
   try {

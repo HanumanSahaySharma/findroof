@@ -29,9 +29,25 @@ export default function Properties() {
       setLoading(false);
     }
   };
+
+  const deleteProperty = async (propertyId: string, userId: string) => {
+    try {
+      const res = await axios.delete(`/api/property/delete-property?propertyId=${propertyId}&userId=${userId}`);
+      if (res.status === 200) {
+        toast.success(res.data.message, {
+          toastId: "success",
+        });
+        setProperties(properties.filter((property: IProperty) => property._id !== propertyId));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getProperties();
   }, [currentUser]);
+
   return (
     <div className="container max-w-screen-2xl ">
       <div className="my-8 p-10 bg-white rounded-xl shadow-md custom-min-h-screen">
@@ -48,7 +64,9 @@ export default function Properties() {
         {loading ? (
           <SkeletonProerty />
         ) : properties.length > 0 ? (
-          properties.map((property: IProperty) => <PropertyCard property={property} key={property._id} />)
+          properties.map((property: IProperty) => (
+            <PropertyCard property={property} key={property._id} deleteProperty={deleteProperty} />
+          ))
         ) : (
           <p>No properties found.</p>
         )}
