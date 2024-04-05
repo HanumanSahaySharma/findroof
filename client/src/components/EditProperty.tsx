@@ -84,7 +84,7 @@ export default function EditProperty() {
     amenities: {
       essentials: [],
       features: [],
-      safety: [],
+      safetyFeatures: [],
     },
   });
   const { loading } = useSelector((state: { loading: ILoading }) => state.loading);
@@ -128,7 +128,7 @@ export default function EditProperty() {
       bathrooms: property.bathrooms,
       essentials: property.amenities.essentials,
       features: property.amenities.features,
-      safetyFeatures: property.amenities.safety,
+      safetyFeatures: property.amenities.safetyFeatures,
     },
   });
 

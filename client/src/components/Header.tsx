@@ -20,11 +20,11 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 
 export default function Header() {
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/signin");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate("/signin");
+  //   }
+  // }, []);
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
   const dispatch = useDispatch();
   const handleSignOut = async () => {

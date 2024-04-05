@@ -1,15 +1,15 @@
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ICurrentUser } from "@/store/user/userSlice";
 import { LucideCheckCircle2, LucideIndianRupee, LucideMapPin } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { capitalizeText } from "@/store/utils/capitalizeText";
-import { Link } from "react-router-dom";
 
 interface IAmenities {
   essentials: string[];
   features: string[];
-  safety: string[];
+  safetyFeatures: string[];
 }
 
 export interface IProperty {
@@ -30,12 +30,12 @@ export interface IProperty {
 
 interface IPropertyCard {
   property: IProperty;
-  deleteProperty: any;
+  deleteProperty?: any;
 }
 
 export default function PropertyCard({ property, deleteProperty }: IPropertyCard) {
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
-  const { userId, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
+  const { userId, slug, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
   const essentials = amenities.essentials.sort();
 
   return (
@@ -70,7 +70,14 @@ export default function PropertyCard({ property, deleteProperty }: IPropertyCard
         )}
       </div>
       <div className="col-span-8">
-        <h2 className="font-medium text-xl mb-2">{name}</h2>
+        <h2 className="font-medium text-xl mb-2">
+          <Link
+            to={`/property/${property._id}`}
+            className="hover:bg-gradient-to-r hover:from-pink-400 hover:via-red-500 hover:to-orange-500 hover:text-transparent hover:bg-clip-text"
+          >
+            {name}
+          </Link>
+        </h2>
         <p className="text-slate-500 flex items-center gap-2 mb-5">
           <LucideMapPin size={18} /> {address}
         </p>
@@ -92,15 +99,15 @@ export default function PropertyCard({ property, deleteProperty }: IPropertyCard
               <LucideIndianRupee size={20} className="mr-1" />
               {price}
             </p>
-            {propertyType === "room" && <p className="text-sm text-slate-500">Room Per Night</p>}
-            {propertyType === "home" && <p className="text-sm text-slate-500">Entire Home Per Night</p>}
+            {propertyType === "room" && <p className="text-sm text-slate-500">Room per night</p>}
+            {propertyType === "home" && <p className="text-sm text-slate-500">Entire Home per night</p>}
           </div>
 
           <div className="flex justify-end gap-4">
             {currentUser?._id === userId && (
               <>
                 <Link
-                  to={`/properties/edit/${property._id}`}
+                  to={`/property/edit/${property._id}`}
                   className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
                 >
                   Edit
@@ -115,9 +122,12 @@ export default function PropertyCard({ property, deleteProperty }: IPropertyCard
             )}
             {currentUser?._id !== userId && (
               <>
-                <Button className="font-normal bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500">
+                <Link
+                  to={`/property/${property._id}`}
+                  className="px-4 py-2 rounded-md h-10 font-normal text-white text-sm flex items-center justify-center bg-gradient-to-tr from-pink-400 via-red-500 to-orange-500  hover:from-pink-600 hover:via-red-600 hover:to-orange-400 transition-all duration-500"
+                >
                   View Details
-                </Button>
+                </Link>
                 <Button className="font-normal bg-gradient-to-tr from-green-500 via-green-500 to-green-700  hover:from-green-600 hover:via-green-600 hover:to-green-400 transition-background duration-500">
                   Book Now
                 </Button>

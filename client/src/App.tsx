@@ -14,6 +14,7 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import AddProperty from "./components/AddProperty";
 import EditProperty from "./components/EditProperty";
+import PropertyDetails from "./components/PropertyDetails";
 
 function App() {
   const { currentUser } = useSelector((state: any) => state.user);
@@ -26,11 +27,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/property/:propertyId" element={<PropertyDetails />} />
           {currentUser && (
             <>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/properties/add-property" element={<AddProperty />} />
-              <Route path="/properties/edit/:propertyId" element={<EditProperty />} />
+              <Route path="/property/add-property" element={<AddProperty />} />
+              <Route path="/property/edit/:propertyId" element={<EditProperty />} />
             </>
           )}
         </Routes>

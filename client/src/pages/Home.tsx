@@ -1,10 +1,11 @@
+import AllProperties from "@/components/AllProperties";
 import Banner from "@/components/Banner";
 
 export default function Home() {
   return (
     <>
       <Banner />
-      <h1>Banner</h1>
+      <AllProperties />
     </>
   );
 }
