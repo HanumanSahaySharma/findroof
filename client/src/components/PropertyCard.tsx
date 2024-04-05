@@ -36,7 +36,9 @@ interface IPropertyCard {
 export default function PropertyCard({ property, deleteProperty }: IPropertyCard) {
   const { currentUser } = useSelector((state: { user: ICurrentUser }) => state.user);
   const { userId, slug, photoUrls, name, description, address, price, propertyFor, propertyType, amenities } = property;
-  const essentials = amenities.essentials.sort();
+  const { essentials, features, safetyFeatures } = amenities;
+
+  const allAmenities = [...essentials, ...features, safetyFeatures].sort();
 
   return (
     <div className="grid grid-cols-12 gap-8 bg-slate-100 p-4 mb-5 rounded-md">
@@ -82,14 +84,14 @@ export default function PropertyCard({ property, deleteProperty }: IPropertyCard
           <LucideMapPin size={18} /> {address}
         </p>
         <div className="flex flex-wrap gap-5 mb-5">
-          {essentials.length > 2 &&
-            essentials.slice(0, 3).map((ess) => (
-              <div className="flex items-center gap-2" key={ess}>
+          {allAmenities.length > 0 &&
+            allAmenities.slice(0, 3).map((amenity, index) => (
+              <div className="flex items-center gap-2" key={index}>
                 <LucideCheckCircle2 size={20} className="text-red-500" />
-                <span className="font-medium">{capitalizeText(ess)}</span>
+                <span className="font-medium capitalize">{amenity}</span>
               </div>
             ))}
-          {essentials.length - 3 !== 0 && <span className="text-slate-400">+ {essentials.length - 3} more</span>}
+          {allAmenities.length > 4 && <span className="text-slate-400">+ {allAmenities.length - 4} more</span>}
         </div>
         <div className="line-clamp-1 mb-10">{description}</div>
 
@@ -99,8 +101,9 @@ export default function PropertyCard({ property, deleteProperty }: IPropertyCard
               <LucideIndianRupee size={20} className="mr-1" />
               {price}
             </p>
-            {propertyType === "room" && <p className="text-sm text-slate-500">Room per night</p>}
-            {propertyType === "home" && <p className="text-sm text-slate-500">Entire Home per night</p>}
+            <p className="text-sm text-slate-500">
+              {propertyType === "room" ? "Room per night" : propertyType === "home" ? "Entire home per night" : ""}
+            </p>
           </div>
 
           <div className="flex justify-end gap-4">

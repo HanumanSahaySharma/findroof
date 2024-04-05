@@ -169,8 +169,11 @@ export default function PropertyDetails() {
                     {price}
                   </span>
                   <span className="uppercase text-slate-500">
-                    {propertyType === "room" ? "Room " : propertyType === "home" ? "Entire home " : ""}
-                    per night
+                    {propertyType === "room"
+                      ? "Room per night"
+                      : propertyType === "home"
+                      ? "Entire home per night"
+                      : ""}
                   </span>
                 </span>
               </div>
